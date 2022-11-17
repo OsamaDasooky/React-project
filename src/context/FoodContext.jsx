@@ -3,12 +3,12 @@ import { createContext, useState } from "react";
 const FoodContext = () => {
   const RecipeContext = createContext({});
 
-  const RecipeProvider = (props) => {
+  const RecipeProvider = ({ children }) => {
     const [recipe, setRecipe] = useState({});
     const FoodContext = { recipe, setRecipe };
     return (
       <RecipeContext.Provider value={FoodContext}>
-        {props.children}
+        {children}
       </RecipeContext.Provider>
     );
   };

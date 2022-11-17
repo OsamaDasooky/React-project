@@ -9,11 +9,6 @@ import HomeContext from "../context/HomeContext";
 import Card from "../Components/Card";
 import { Button, Container, Form } from "react-bootstrap";
 import { MDBSpinner } from "mdb-react-ui-kit";
-import {
-  MDBDropdown,
-  MDBDropdownMenu,
-  MDBDropdownItem,
-} from "mdb-react-ui-kit";
 
 const { FoodsContext } = HomeContext;
 export const Home = () => {
@@ -24,12 +19,10 @@ export const Home = () => {
 
   useEffect(() => {
     fetchQueries(setAutoCompletes, query);
-    console.log(autcompletes);
   }, [query]);
   useEffect(() => {
     setFoods([]);
     fetchFood(getRandomIngredient(), addFood, false, setNextFoods);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   console.log(foods);
 
@@ -58,6 +51,7 @@ export const Home = () => {
       </div>
     );
   }
+
   return (
     <div>
       <Container>

@@ -24,8 +24,12 @@ function NavScrollExample() {
             <NavLink to="/" className="navbar-brand" style={{ fontSize: 17 }}>
               Home
             </NavLink>
-            <NavLink to="/d" className="navbar-brand" style={{ fontSize: 17 }}>
-              Link
+            <NavLink
+              to="/profile"
+              className="navbar-brand"
+              style={{ fontSize: 17 }}
+            >
+              Profile
             </NavLink>
           </Nav>
 
