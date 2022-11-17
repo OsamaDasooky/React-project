@@ -10,9 +10,13 @@ import {
   MDBInput,
 } from "mdb-react-ui-kit";
 import Button from "react-bootstrap/Button";
+import { Form } from "react-bootstrap";
+import logo from "../../assets/logo.png";
+import { Link } from "react-router-dom";
+
 function Login() {
   return (
-    <div>
+    <Form>
       <MDBContainer className="py-5">
         <MDBCard className="col-8 mx-auto">
           <MDBRow className="g-0 ">
@@ -26,13 +30,9 @@ function Login() {
 
             <MDBCol className="col-lg-6 ">
               <MDBCardBody className="d-flex flex-column pb-0 ">
-                <div className="d-flex flex-row mt-2 justify-content-center">
-                  <MDBIcon
-                    fas
-                    icon="cubes fa-3x me-3"
-                    style={{ color: "#ff6219" }}
-                  />
-                  <span className="h1 fw-bold mb-0">Logo</span>
+                <div className="d-flex flex-column mt-2 align-items-center">
+                  <img src={logo} alt="" style={{ width: 50 }} />
+                  <p className="h3 fw-bold mb-0">Foods Recipe</p>
                 </div>
 
                 <h5
@@ -57,7 +57,11 @@ function Login() {
                   size="md"
                 />
 
-                <Button className="mb-2 px-5 bg-dark" size="md">
+                <Button
+                  className="mb-2 px-5 bg-dark border-dark"
+                  size="md"
+                  type="submit"
+                >
                   Login
                 </Button>
                 <a className="small text-muted  align-self-end " href="#!">
@@ -68,16 +72,16 @@ function Login() {
                   style={{ color: "#393f81" }}
                 >
                   Don't have an account?{" "}
-                  <a href="register" style={{ color: "#393f81" }}>
+                  <Link to="/register" style={{ color: "#393f81" }}>
                     Register here
-                  </a>
+                  </Link>
                 </p>
               </MDBCardBody>
             </MDBCol>
           </MDBRow>
         </MDBCard>
       </MDBContainer>
-    </div>
+    </Form>
   );
 }
 

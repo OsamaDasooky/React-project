@@ -10,21 +10,22 @@ import {
   MDBInput,
 } from "mdb-react-ui-kit";
 import Button from "react-bootstrap/Button";
+import { Form } from "react-bootstrap";
+import logo from "../../assets/logo.png";
+import { Link } from "react-router-dom";
+
 function Register() {
   return (
-    <div>
+    <Form>
       <MDBContainer className="py-5">
         <MDBCard className="col-8 mx-auto">
           <MDBRow className="g-0 ">
             <MDBCol className="col-lg-6 ">
               <MDBCardBody className="d-flex flex-column pb-0 ">
-                <div className="d-flex flex-row mt-2 justify-content-center">
-                  <MDBIcon
-                    fas
-                    icon="cubes fa-3x me-3"
-                    style={{ color: "#ff6219" }}
-                  />
-                  <span className="h1 fw-bold mb-0">Logo</span>
+                <div className="d-flex flex-column mt-2 align-items-center">
+                  <img src={logo} alt="" style={{ width: 50 }} />
+
+                  <span className="h3 fw-bold mb-0">Foods Recipe</span>
                 </div>
 
                 <h5
@@ -63,7 +64,11 @@ function Register() {
                   size="md"
                 />
 
-                <Button className="mb-2 px-5 bg-dark" size="md">
+                <Button
+                  className="mb-2 px-5 bg-dark  border-dark"
+                  size="md"
+                  type="submit"
+                >
                   Register
                 </Button>
 
@@ -72,9 +77,9 @@ function Register() {
                   style={{ color: "#393f81" }}
                 >
                   Already have account?
-                  <a href="/login" style={{ color: "#393f81" }}>
+                  <Link to="/login" style={{ color: "#393f81" }}>
                     Login
-                  </a>
+                  </Link>
                 </p>
               </MDBCardBody>
             </MDBCol>
@@ -88,7 +93,7 @@ function Register() {
           </MDBRow>
         </MDBCard>
       </MDBContainer>
-    </div>
+    </Form>
   );
 }
 
