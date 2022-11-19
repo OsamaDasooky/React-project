@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   MDBContainer,
   MDBCard,
@@ -6,17 +6,91 @@ import {
   MDBCardImage,
   MDBRow,
   MDBCol,
-  MDBIcon,
   MDBInput,
 } from "mdb-react-ui-kit";
 import Button from "react-bootstrap/Button";
 import { Form } from "react-bootstrap";
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
+import useValidation from "../../Hook/useValidation";
+import { useNavigate } from "react-router-dom";
+import { useSignIn } from "react-auth-kit";
+import axios from "axios";
+import useOperation from "../../Hook/useOperation";
 
 function Register() {
+  const [
+    nameValidation,
+    emailValidation,
+    passwordValidation,
+    message,
+    setMessage,
+  ] = useValidation();
+  const { setCurrentUserToLocal, setCurrentUser, setToken, setTokenToLocal } =
+    useOperation();
+
+  const navigate = useNavigate();
+  const SignIn = useSignIn();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+
+  const data = new FormData();
+  data.append("name", name);
+  data.append("email", email);
+  data.append("password", pass);
+  data.append("password_confirmation", confirmPass);
+
+  const config = {
+    method: "post",
+    url: "http://127.0.0.1:8000/api/register",
+    headers: {
+      Accept: "application/vnd.api+json",
+      "Content-Type": "application/vnd.api+json",
+    },
+    data: data,
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (
+      nameValidation(name) &&
+      emailValidation(email) &&
+      passwordValidation(pass, confirmPass)
+    ) {
+      axios(config)
+        .then((res) => {
+          console.log(res.data);
+          if (
+            SignIn({
+              token: res.data.token,
+              expiresIn: 1000,
+              tokenType: "Bearer",
+              authState: res.data.user,
+            })
+          ) {
+            setCurrentUser(res.data.user);
+            setToken(res.data.token);
+            setCurrentUserToLocal();
+            setTokenToLocal();
+            return navigate("/profile");
+          }
+        })
+        .catch(function (error) {
+          setMessage((prev) => ({
+            ...prev,
+            email: error.response.data.errors.email[0],
+          }));
+        });
+    }
+  };
   return (
-    <Form>
+    <Form
+      onSubmit={(e) => {
+        handleSubmit(e);
+      }}
+    >
       <MDBContainer className="py-5">
         <MDBCard className="col-8 mx-auto">
           <MDBRow className="g-0 ">
@@ -35,33 +109,63 @@ function Register() {
                   Sign into your account
                 </h5>
 
+                <div className="text-danger">
+                  {message.name != "" ? message.name : ""}
+                </div>
                 <MDBInput
                   wrapperClass="mb-4"
                   placeholder="UserName"
-                  id="formControlLg"
                   type="text"
                   size="md"
+                  required
+                  id="username"
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
+                  onBlur={(e) => {
+                    setName(e.target.value);
+                  }}
                 />
+                <div className="text-danger">
+                  {message.email != "" ? message.email : ""}
+                </div>
                 <MDBInput
                   wrapperClass="mb-4"
                   placeholder="Email address"
-                  id="formControlLg"
                   type="email"
+                  id="email"
                   size="md"
+                  required
+                  onBlur={(e) => {
+                    setEmail(e.target.value);
+                    setMessage((pervs) => ({ ...pervs, email: "" }));
+                  }}
                 />
+                <div className="text-danger">
+                  {message.pass != "" ? message.pass : ""}
+                </div>
                 <MDBInput
                   wrapperClass="mb-4"
                   placeholder="Password"
-                  id="formControlLg"
                   type="password"
                   size="md"
+                  required
+                  id="password"
+                  onBlur={(e) => {
+                    setPass(e.target.value);
+                  }}
                 />
                 <MDBInput
                   wrapperClass="mb-4"
                   placeholder="Confirm Password"
-                  id="formControlLg"
                   type="password"
                   size="md"
+                  required
+                  id="cpassword"
+                  onBlur={(e) => {
+                    setConfirmPass(e.target.value);
+                    passwordValidation(pass, confirmPass);
+                  }}
                 />
 
                 <Button

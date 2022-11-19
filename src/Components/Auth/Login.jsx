@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   MDBContainer,
   MDBCard,
@@ -6,17 +6,77 @@ import {
   MDBCardImage,
   MDBRow,
   MDBCol,
-  MDBIcon,
   MDBInput,
 } from "mdb-react-ui-kit";
 import Button from "react-bootstrap/Button";
-import { Form } from "react-bootstrap";
+import { Alert, Form } from "react-bootstrap";
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
+import useValidation from "../../Hook/useValidation";
+import useOperation from "../../Hook/useOperation";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useSignIn } from "react-auth-kit";
 
 function Login() {
+  const navigate = useNavigate();
+  const SignIn = useSignIn();
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+  const [, , , message, setMessage] = useValidation();
+  const { setCurrentUserToLocal, setCurrentUser, setToken, setTokenToLocal } =
+    useOperation();
+  //-----------------------------
+  const data = new FormData();
+  data.append("email", email);
+  data.append("password", pass);
+  console.log(setCurrentUserToLocal);
+  const config = {
+    method: "post",
+    url: "http://127.0.0.1:8000/api/login",
+    headers: {
+      Accept: "application/vnd.api+json",
+      "Content-Type": "application/vnd.api+json",
+    },
+    data: data,
+  };
+  //-------------------------------
+  const handleLogin = (e) => {
+    e.preventDefault();
+    setMessage((prev) => ({ ...prev, login: "" }));
+    axios(config)
+      .then((res) => {
+        console.log(res.data);
+        if (
+          SignIn({
+            token: res.data.token,
+            expiresIn: 1000,
+            tokenType: "Bearer",
+            authState: setCurrentUserToLocal(res.data.data.user),
+          })
+        ) {
+          setCurrentUser(res.data.data.user);
+          setToken(res.data.data.token);
+          setCurrentUserToLocal(res.data.data.user);
+          setTokenToLocal(res.data.data.token);
+          return navigate("/profile");
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+        setMessage((prev) => ({
+          ...prev,
+          login: error.response.data?.message,
+        }));
+      });
+  };
+
   return (
-    <Form>
+    <Form
+      onSubmit={(e) => {
+        handleLogin(e);
+      }}
+    >
       <MDBContainer className="py-5">
         <MDBCard className="col-8 mx-auto">
           <MDBRow className="g-0 ">
@@ -41,6 +101,11 @@ function Login() {
                 >
                   Sign into your account
                 </h5>
+                {message.login != "" ? (
+                  <Alert variant="danger"> {message.login} </Alert>
+                ) : (
+                  ""
+                )}
 
                 <MDBInput
                   wrapperClass="mb-4"
@@ -48,6 +113,10 @@ function Login() {
                   id="formControlLg"
                   type="email"
                   size="md"
+                  required
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
                 />
                 <MDBInput
                   wrapperClass="mb-4"
@@ -55,6 +124,10 @@ function Login() {
                   id="formControlLg"
                   type="password"
                   size="md"
+                  required
+                  onChange={(e) => {
+                    setPass(e.target.value);
+                  }}
                 />
 
                 <Button

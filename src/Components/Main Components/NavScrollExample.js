@@ -3,10 +3,17 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import { useIsAuthenticated } from "react-auth-kit";
+import { useSignOut } from "react-auth-kit";
+import useOperation from "../../Hook/useOperation";
 
 function NavScrollExample() {
+  const { removeTokenFromLocal } = useOperation();
+  const isAuth = useIsAuthenticated();
+  const logout = useSignOut();
+  const navigate = useNavigate();
   return (
     <Navbar style={{ backgroundColor: "#61d400" }} expand="lg">
       <Container>
@@ -25,6 +32,20 @@ function NavScrollExample() {
               Home
             </NavLink>
             <NavLink
+              to="/contact"
+              className="navbar-brand"
+              style={{ fontSize: 17 }}
+            >
+              Contact
+            </NavLink>
+            <NavLink
+              to="/about"
+              className="navbar-brand"
+              style={{ fontSize: 17 }}
+            >
+              About
+            </NavLink>
+            <NavLink
               to="/profile"
               className="navbar-brand"
               style={{ fontSize: 17 }}
@@ -32,10 +53,23 @@ function NavScrollExample() {
               Profile
             </NavLink>
           </Nav>
-
-          <Link to="/login">
-            <Button variant="btn btn-dark ">login</Button>
-          </Link>
+          {isAuth() ? (
+            <Button
+              className="bg-danger border-danger"
+              variant="btn btn-dark "
+              onClick={() => {
+                logout();
+                removeTokenFromLocal();
+                navigate("/", { replace: true });
+              }}
+            >
+              logout
+            </Button>
+          ) : (
+            <Link to="/login">
+              <Button variant="btn btn-dark ">login</Button>
+            </Link>
+          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>

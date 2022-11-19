@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   MDBCol,
   MDBContainer,
@@ -9,11 +9,54 @@ import {
   MDBCardImage,
   MDBTypography,
 } from "mdb-react-ui-kit";
+
 import Card from "../Components/Card";
 import logo from "../assets/logo.png";
+import { useNavigate } from "react-router-dom";
+import { useIsAuthenticated } from "react-auth-kit";
+import { useAuthUser } from "react-auth-kit";
+import FoodContext from "../context/FoodContext";
+
+const fav = JSON.parse(localStorage.getItem("favorite"));
+const { RecipeContext } = FoodContext;
 
 export default function Profile() {
-  const user = {};
+  // const { userFav, setUserFav } = useContext(RecipeContext);
+  const isAuth = useIsAuthenticated();
+  const navigate = useNavigate();
+  const auth = useAuthUser();
+  const [userFav, setUserFav] = useState(
+    fav.filter((item) => {
+      return item.userId == auth().id;
+    })
+  );
+
+  const handleRemove = (recipe) => {
+    setUserFav(
+      userFav.filter((item) => {
+        return item.recipe.foodId != recipe.foodId;
+      })
+    );
+  };
+  useEffect(() => {
+    setUserFav(
+      JSON.parse(localStorage.getItem("favorite")).filter((item) => {
+        return item.recipe.foodId != auth.foodId;
+      })
+    );
+  }, []);
+  useEffect(() => {
+    if (!isAuth()) {
+      return navigate("/login", { replace: true });
+    }
+  }, []);
+  const addToFav = (recipe) => {
+    setUserFav(
+      JSON.parse(localStorage.getItem("favorite")).filter((item) => {
+        return item.recipe.foodId != recipe.foodId;
+      })
+    );
+  };
   return (
     <div className="gradient-custom-2 my-5">
       <MDBContainer className="py-5 h-100">
@@ -37,10 +80,8 @@ export default function Profile() {
                   />
                 </div>
                 <div className="ms-3" style={{ marginTop: "130px" }}>
-                  <MDBTypography tag="h3">Osama Dasooky</MDBTypography>{" "}
-                  <MDBCardText className="  ">
-                    osama.dasooky1999@gmail.com
-                  </MDBCardText>
+                  <MDBTypography tag="h3">{auth().name}</MDBTypography>{" "}
+                  <MDBCardText className="  ">{auth().email}</MDBCardText>
                 </div>
               </div>
               <div
@@ -54,8 +95,16 @@ export default function Profile() {
                   </MDBCardText>
                 </div>
                 <MDBRow>
-                  {user.id != undefined ? (
-                    <Card />
+                  {userFav != null ? (
+                    userFav.map((ele) => (
+                      <Card
+                        item={ele.recipe}
+                        fav={true}
+                        key={ele.recipe.foodId}
+                        handleRemove={handleRemove}
+                        addToFav={addToFav}
+                      />
+                    ))
                   ) : (
                     <p>Their are no Favorite Recipes</p>
                   )}

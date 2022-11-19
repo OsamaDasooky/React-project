@@ -9,6 +9,7 @@ import HomeContext from "../context/HomeContext";
 import Card from "../Components/Card";
 import { Button, Container, Form } from "react-bootstrap";
 import { MDBSpinner } from "mdb-react-ui-kit";
+import useOperation from "../Hook/useOperation";
 
 const { FoodsContext } = HomeContext;
 export const Home = () => {
@@ -16,31 +17,32 @@ export const Home = () => {
   const [nextFoods, setNextFoods] = useState("");
   const [autcompletes, setAutoCompletes] = useState([]);
   const [query, setQuery] = useState("");
+  const { getCurrentUserFromLocal } = useOperation();
 
   useEffect(() => {
     fetchQueries(setAutoCompletes, query);
   }, [query]);
   useEffect(() => {
     setFoods([]);
-    fetchFood(getRandomIngredient(), addFood, false, setNextFoods);
+    fetchFood(getRandomIngredient(), addFood, setNextFoods);
+    getCurrentUserFromLocal();
   }, []);
-  console.log(foods);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFoods([]);
-    fetchFood(query, addFood, null, setNextFoods);
-    setQuery("");
+    if (query !== "") {
+      setFoods([]);
+      fetchFood(query, addFood, setNextFoods);
+      setQuery("");
+    }
   };
   const handleQueryChange = (value) => {
     setQuery(value);
-    console.log(query);
   };
   const handleQuerySearch = (e) => {
     setQuery(e.target.value);
     handleSubmit(e);
   };
-
   if (foods.length === 0) {
     return (
       <div className="position-relative " style={{ height: 570 }}>
@@ -108,7 +110,7 @@ export const Home = () => {
       </Container>
       <Container className="row justify-content-evenly mx-auto py-5">
         {foods.map((item, index) => (
-          <Card item={item} key={index} />
+          <Card item={item} key={index} fav={false} />
         ))}
       </Container>
     </div>

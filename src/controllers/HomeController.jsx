@@ -11,14 +11,10 @@ const getRandomIngredient = () => {
   return ingredients[Math.floor(Math.random() * (max - min))];
 };
 
-const fetchFood = (ingredient, addFood, setLoading, setNextFoods) => {
+const fetchFood = (ingredient, addFood, setNextFoods) => {
   const app_id = KEYS.REACT_APP_ID_RECIPE;
   const app_key = KEYS.REACT_APP_KEY_RECIPE;
   const endpoint = baseUrl.recipe;
-
-  if (setLoading) {
-    setLoading(true);
-  }
 
   axios
     .get(
@@ -50,9 +46,7 @@ const fetchFood = (ingredient, addFood, setLoading, setNextFoods) => {
         };
         addFood(recipe);
       });
-      if (setLoading) {
-        setLoading(false);
-      }
+
       if (setNextFoods) {
         setNextFoods(res._links.next.href);
       }

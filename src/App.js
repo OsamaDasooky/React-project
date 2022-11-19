@@ -5,19 +5,36 @@ import FoodsProvider from "./provider/FoodsProvider";
 import Login from "./Components/Auth/Login";
 import Register from "./Components/Auth/Register";
 import { RecipeProvider } from "./provider/RecipeProvider";
-import Profile from "./pages/Profile";
+import { AuthProvider } from "react-auth-kit";
+import { ProfileProvider } from "./provider/ProfileProvider";
+import { Contact } from "./pages/Contact";
+import { About } from "./pages/About";
+import { RequireAuth } from "react-auth-kit";
+
 function App() {
   return (
     <>
-      <Header />
-      <Routes>
-        <Route path="/" element={<FoodsProvider />}></Route>
-        <Route path="/:id" element={<RecipeProvider />}></Route>
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-        <Route path="profile" element={<Profile />} />
-      </Routes>
-      <Footer />
+      <AuthProvider authType={"cookie"} authName={"_auth"}>
+        <Header />
+        <Routes>
+          <Route path="/" element={<FoodsProvider />}></Route>
+          <Route path="/:id" element={<RecipeProvider />}></Route>
+          <Route path="/profile/:id" element={<RecipeProvider />}></Route>
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          <Route
+            path="profile"
+            element={
+              <RequireAuth loginPath={"/login"}>
+                <ProfileProvider />
+              </RequireAuth>
+            }
+          />
+          <Route path="contact" element={<Contact />} />
+          <Route path="about" element={<About />} />
+        </Routes>
+        <Footer />
+      </AuthProvider>
     </>
   );
 }
