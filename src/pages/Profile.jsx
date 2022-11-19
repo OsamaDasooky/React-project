@@ -94,7 +94,7 @@ export default function Profile() {
                     Favorite Recipes
                   </MDBCardText>
                 </div>
-                <MDBRow>
+                <MDBRow className="justify-content-evenly">
                   {userFav != null ? (
                     userFav.map((ele) => (
                       <Card
