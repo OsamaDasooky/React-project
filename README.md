@@ -1,70 +1,32 @@
-# Getting Started with Create React App
+#  Food Recipes
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Food recipes web application built using react, It provides the user with a lot of delicious recipes and full information about its nutrition facts. React hooks were used in this application and the data came from an API using axios.
 
-## Available Scripts
+This project was build only for those who wants to contribute and make their make their github stats look appealing.
 
-In the project directory, you can run:
+You can't access profile & add fav without login
 
-### `npm start`
+1- in sign-up page you will able to sing-up with your email and password
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2- if you try to sign-up with empty input field it will alert you empty input not allow
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+3- once you sign-up successfully it will redirect you to login page & and if you again try to sign-up with same email it will say you user allready exist and it redirect you to login page
 
-### `npm test`
+4- if you login with wrong credentials it will alert you wrong credential
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+5- once you login successefully the login button in navbar will be not longer exist and sign-up button will changed to log-out
 
-### `npm run build`
+6- And once successfull login user will no longer access login & sign-up pages form URL also they can't access
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+7- once user login successefully they will redirect to profile
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+8- there you will see multiple hes fav recipes
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+9- when user changing search input there a spiner loading indicator will showing results successefully fetch from API loading indicater will gone and product will be showing
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+live url: [demo](https://foodrecipeorange.netlify.app/)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+ [figma link:](https://www.figma.com/file/nPjr0PeomWUGpmyM1TSITf/Untitled?node-id=0%3A1&t=HX43Jx9pGIhEMVBl-0)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
