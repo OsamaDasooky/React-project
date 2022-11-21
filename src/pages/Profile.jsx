@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MDBCol,
   MDBContainer,
@@ -15,10 +15,8 @@ import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useIsAuthenticated } from "react-auth-kit";
 import { useAuthUser } from "react-auth-kit";
-import FoodContext from "../context/FoodContext";
 
 const fav = JSON.parse(localStorage.getItem("favorite"));
-const { RecipeContext } = FoodContext;
 
 export default function Profile() {
   // const { userFav, setUserFav } = useContext(RecipeContext);
@@ -27,6 +25,7 @@ export default function Profile() {
   const auth = useAuthUser();
   const [userFav, setUserFav] = useState(
     fav.filter((item) => {
+      // console.log(item.userId == auth().id);
       return item.userId == auth().id;
     })
   );
@@ -38,18 +37,21 @@ export default function Profile() {
       })
     );
   };
+
   useEffect(() => {
     setUserFav(
       JSON.parse(localStorage.getItem("favorite")).filter((item) => {
-        return item.recipe.foodId != auth.foodId;
+        return item.userId == auth().id;
       })
     );
   }, []);
+
   useEffect(() => {
     if (!isAuth()) {
       return navigate("/login", { replace: true });
     }
   }, []);
+
   const addToFav = (recipe) => {
     setUserFav(
       JSON.parse(localStorage.getItem("favorite")).filter((item) => {

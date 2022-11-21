@@ -6,6 +6,7 @@ export default function IngredientsList() {
   const { recipe } = useContext(RecipeContext);
   return (
     <MDBListGroup style={{ minWidth: "22rem" }} light className=" col-6 ">
+      <h4>Ingredients List</h4>
       {recipe?.ingredients.map((ele) => (
         <MDBListGroupItem className="d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center">

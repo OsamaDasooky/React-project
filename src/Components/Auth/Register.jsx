@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useSignIn } from "react-auth-kit";
 import axios from "axios";
 import useOperation from "../../Hook/useOperation";
+import RegisterWithGoogle from "./RegisterWithGoogle";
 
 function Register() {
   const [
@@ -26,6 +27,7 @@ function Register() {
     message,
     setMessage,
   ] = useValidation();
+
   const { setCurrentUserToLocal, setCurrentUser, setToken, setTokenToLocal } =
     useOperation();
 
@@ -34,6 +36,7 @@ function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const [loading, setLoading] = useState(false);
   const [confirmPass, setConfirmPass] = useState("");
 
   const data = new FormData();
@@ -59,6 +62,7 @@ function Register() {
       emailValidation(email) &&
       passwordValidation(pass, confirmPass)
     ) {
+      setLoading(true);
       axios(config)
         .then((res) => {
           console.log(res.data);
@@ -67,13 +71,14 @@ function Register() {
               token: res.data.token,
               expiresIn: 1000,
               tokenType: "Bearer",
-              authState: res.data.user,
+              authState: setCurrentUserToLocal(res.data.data.user),
             })
           ) {
-            setCurrentUser(res.data.user);
-            setToken(res.data.token);
-            setCurrentUserToLocal();
-            setTokenToLocal();
+            setCurrentUser(res.data.data.user);
+            setToken(res.data.data.token);
+            setCurrentUserToLocal(res.data.data.user);
+            setTokenToLocal(res.data.data.token);
+            setLoading(false);
             return navigate("/profile");
           }
         })
@@ -82,8 +87,52 @@ function Register() {
             ...prev,
             email: error.response.data.errors.email[0],
           }));
+          setLoading(false);
         });
     }
+  };
+  const handleRegisterWithGoogle = (response) => {
+    console.log(response);
+    const GoogleData = new FormData();
+    GoogleData.append("name", response.profileObj.name);
+    GoogleData.append("email", response.profileObj.email);
+    GoogleData.append("password", response.profileObj.googleId);
+    GoogleData.append("password_confirmation", response.profileObj.googleId);
+    const GoogleConfig = {
+      method: "post",
+      url: "http://127.0.0.1:8000/api/register",
+      headers: {
+        Accept: "application/vnd.api+json",
+        "Content-Type": "application/vnd.api+json",
+      },
+      data: GoogleData,
+    };
+    axios(GoogleConfig)
+      .then((res) => {
+        if (
+          SignIn({
+            token: res.data.token,
+            expiresIn: 1000,
+            tokenType: "Bearer",
+            authState: setCurrentUserToLocal(res.data.data.user),
+          })
+        ) {
+          setCurrentUser(res.data.data.user);
+          setToken(res.data.data.token);
+          setCurrentUserToLocal(res.data.data.user);
+          setTokenToLocal(res.data.data.token);
+          setLoading(false);
+          return navigate("/profile");
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+        setMessage((prev) => ({
+          ...prev,
+          email: error.response.data.errors.email[0],
+        }));
+        setLoading(false);
+      });
   };
   return (
     <Form
@@ -167,14 +216,32 @@ function Register() {
                     passwordValidation(pass, confirmPass);
                   }}
                 />
-
-                <Button
-                  className="mb-2 px-5 bg-dark  border-dark"
-                  size="md"
-                  type="submit"
-                >
-                  Register
-                </Button>
+                {!loading ? (
+                  <Button
+                    className="mb-2 px-5 bg-dark  border-dark"
+                    size="md"
+                    type="submit"
+                  >
+                    Register
+                  </Button>
+                ) : (
+                  <Button
+                    className="mb-2 px-5 bg-dark border-dark"
+                    size="md"
+                    type="submit"
+                    disabled
+                  >
+                    <span
+                      class="spinner-border spinner-border-sm text-light"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                    Loading...
+                  </Button>
+                )}
+                <RegisterWithGoogle
+                  handleRegisterWithGoogle={handleRegisterWithGoogle}
+                />
 
                 <p
                   className="mt-5 pb-lg-2 text-center "

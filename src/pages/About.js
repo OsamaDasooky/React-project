@@ -8,7 +8,6 @@ import {
   MDBCol,
   MDBContainer,
 } from "mdb-react-ui-kit";
-import "./contact.css";
 export function About() {
   return (
     <MDBContainer className="my-5 ">

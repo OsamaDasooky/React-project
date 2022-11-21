@@ -15,7 +15,6 @@ import { Badge } from "react-bootstrap";
 export default function Card() {
   const { RecipeContext } = FoodContext;
   const { recipe } = useContext(RecipeContext);
-  const [addFav, setAddFav] = useState(false);
 
   return (
     <MDBContainer>
@@ -29,7 +28,7 @@ export default function Card() {
               className="rounded"
             />
           </MDBCol>
-          <MDBCol md="7">
+          <MDBCol md="8">
             <MDBCardBody className="px-5 py-5 d-flex flex-column justify-content-between">
               <MDBCardTitle className="h1 mb-3">{recipe.label}</MDBCardTitle>
               <MDBCardText>
@@ -61,29 +60,6 @@ export default function Card() {
                 </small>
               </MDBCardText>
             </MDBCardBody>
-          </MDBCol>
-          <MDBCol md="1">
-            {addFav == false ? (
-              <MDBIcon
-                far
-                icon="heart"
-                className="h1"
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  setAddFav(!addFav);
-                }}
-              />
-            ) : (
-              <MDBIcon
-                fas
-                style={{ cursor: "pointer" }}
-                className="h1"
-                icon="heart"
-                onClick={() => {
-                  setAddFav(!addFav);
-                }}
-              />
-            )}
           </MDBCol>
         </MDBRow>
       </div>

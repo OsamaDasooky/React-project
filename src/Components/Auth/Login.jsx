@@ -17,12 +17,14 @@ import useOperation from "../../Hook/useOperation";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSignIn } from "react-auth-kit";
+import LoginWithGoogle from "./LoginWithGoogle";
 
 function Login() {
   const navigate = useNavigate();
   const SignIn = useSignIn();
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const [loading, setLoading] = useState(false);
   const [, , , message, setMessage] = useValidation();
   const { setCurrentUserToLocal, setCurrentUser, setToken, setTokenToLocal } =
     useOperation();
@@ -30,7 +32,7 @@ function Login() {
   const data = new FormData();
   data.append("email", email);
   data.append("password", pass);
-  console.log(setCurrentUserToLocal);
+
   const config = {
     method: "post",
     url: "http://127.0.0.1:8000/api/login",
@@ -44,6 +46,7 @@ function Login() {
   const handleLogin = (e) => {
     e.preventDefault();
     setMessage((prev) => ({ ...prev, login: "" }));
+    setLoading(true);
     axios(config)
       .then((res) => {
         console.log(res.data);
@@ -59,17 +62,65 @@ function Login() {
           setToken(res.data.data.token);
           setCurrentUserToLocal(res.data.data.user);
           setTokenToLocal(res.data.data.token);
+          setLoading(false);
           return navigate("/profile");
         }
       })
       .catch(function (error) {
         console.log(error);
+        setLoading(false);
+
         setMessage((prev) => ({
           ...prev,
           login: error.response.data?.message,
         }));
       });
   };
+
+  const handleLoginWithGoogle = (response) => {
+    const GoogleData = new FormData();
+    GoogleData.append("email", response.profileObj.email);
+    GoogleData.append("password", response.profileObj.googleId);
+
+    const GoogleConfig = {
+      method: "post",
+      url: "http://127.0.0.1:8000/api/login",
+      headers: {
+        Accept: "application/vnd.api+json",
+        "Content-Type": "application/vnd.api+json",
+      },
+      data: GoogleData,
+    };
+    axios(GoogleConfig)
+      .then((res) => {
+        console.log(res.data);
+        if (
+          SignIn({
+            token: res.data.token,
+            expiresIn: 1000,
+            tokenType: "Bearer",
+            authState: setCurrentUserToLocal(res.data.data.user),
+          })
+        ) {
+          setCurrentUser(res.data.data.user);
+          setToken(res.data.data.token);
+          setCurrentUserToLocal(res.data.data.user);
+          setTokenToLocal(res.data.data.token);
+          setLoading(false);
+          return navigate("/profile");
+        }
+      })
+      .catch(function (error) {
+        // console.log(error);
+        setLoading(false);
+
+        setMessage((prev) => ({
+          ...prev,
+          login: error.response.data?.message,
+        }));
+      });
+  };
+  //----------------------------------
 
   return (
     <Form
@@ -129,14 +180,33 @@ function Login() {
                     setPass(e.target.value);
                   }}
                 />
+                {!loading ? (
+                  <Button
+                    className="mb-2 px-5 bg-dark border-dark"
+                    size="md"
+                    type="submit"
+                  >
+                    Login
+                  </Button>
+                ) : (
+                  <Button
+                    className="mb-2 px-5 bg-dark border-dark"
+                    size="md"
+                    type="submit"
+                    disabled
+                  >
+                    <span
+                      class="spinner-border spinner-border-sm text-light"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                    Loading...
+                  </Button>
+                )}
+                <LoginWithGoogle
+                  handleLoginWithGoogle={handleLoginWithGoogle}
+                />
 
-                <Button
-                  className="mb-2 px-5 bg-dark border-dark"
-                  size="md"
-                  type="submit"
-                >
-                  Login
-                </Button>
                 <a className="small text-muted  align-self-end " href="#!">
                   Forgot password?
                 </a>

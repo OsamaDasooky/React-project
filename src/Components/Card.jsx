@@ -1,6 +1,7 @@
 import { Badge, Button } from "react-bootstrap";
+import { useIsAuthenticated } from "react-auth-kit";
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   MDBCard,
   MDBCardBody,
@@ -9,12 +10,14 @@ import {
   MDBIcon,
 } from "mdb-react-ui-kit";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useOperation from "../Hook/useOperation";
 
 export default function Card({ item, fav, handleRemove, addToFav }) {
-  const { removeToFavorite, addToFavorite, favorite } = useOperation();
+  const { removeToFavorite, addToFavorite } = useOperation();
   const [addFav, setAddFav] = useState(fav);
+  const isAuth = useIsAuthenticated();
+  const navigate = useNavigate();
 
   return (
     <MDBCard style={{ maxWidth: "300px", marginBottom: 20 }}>
@@ -54,9 +57,13 @@ export default function Card({ item, fav, handleRemove, addToFav }) {
                 border: "#61d400",
               }}
               onClick={() => {
-                setAddFav(!addFav);
-                addToFavorite(item);
-                addToFav(item);
+                if (isAuth()) {
+                  setAddFav(!addFav);
+                  addToFavorite(item);
+                  addToFav(item);
+                } else {
+                  return navigate("login");
+                }
               }}
             >
               Add <MDBIcon far icon="heart" />

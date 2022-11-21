@@ -11,6 +11,7 @@ export function NutrientsChart() {
   return (
     <>
       <ListGroup style={{ width: "auto" }}>
+        <h4>Ingredients List</h4>
         {totalNutrients.slice(0, 16).map((nutrient) => (
           <ListGroup.Item>
             {nutrient.label} : <b>{Math.floor(nutrient.quantity)}</b>{" "}
@@ -19,6 +20,7 @@ export function NutrientsChart() {
         ))}
       </ListGroup>
       <ListGroup style={{ width: "auto" }}>
+        <h4 className="mt-4"></h4>
         {totalNutrients.slice(16, 31).map((nutrient) => (
           <ListGroup.Item>
             {nutrient.label} : <b>{Math.floor(nutrient.quantity)}</b>{" "}
