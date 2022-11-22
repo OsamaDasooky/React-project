@@ -8,7 +8,7 @@ import {
 import HomeContext from "../context/HomeContext";
 import Card from "../Components/Card";
 import { Button, Container, Form } from "react-bootstrap";
-import { MDBSpinner } from "mdb-react-ui-kit";
+import { MDBCarousel, MDBCarouselItem, MDBSpinner } from "mdb-react-ui-kit";
 import useOperation from "../Hook/useOperation";
 
 const { FoodsContext } = HomeContext;
@@ -56,7 +56,30 @@ export const Home = () => {
 
   return (
     <div>
-      <Container>
+      <MDBCarousel showControls showIndicators>
+        <MDBCarouselItem
+          style={{ height: "60vh" }}
+          className="w-100 d-block"
+          itemId={1}
+          src="https://png.pngtree.com/thumb_back/fh260/back_our/20190621/ourmid/pngtree-black-chinese-steak-gourmet-meat-taobao-banner-image_175092.jpg"
+          alt="..."
+        ></MDBCarouselItem>
+        <MDBCarouselItem
+          style={{ height: "60vh" }}
+          className="w-100 d-block"
+          itemId={2}
+          src="https://t4.ftcdn.net/jpg/03/54/72/63/360_F_354726339_wDkWbhZDjFvxYafghZ5lvEv5kRVsY35L.jpg"
+          alt="..."
+        ></MDBCarouselItem>
+        <MDBCarouselItem
+          style={{ height: "60vh" }}
+          className="w-100 d-block"
+          itemId={3}
+          src="https://png.pngtree.com/thumb_back/fh260/back_our/20190621/ourmid/pngtree-black-meat-western-food-banner-background-image_194600.jpg"
+          alt="..."
+        ></MDBCarouselItem>
+      </MDBCarousel>
+      <Container style={{ position: "relative", top: "-200px", zIndex: 2 }}>
         <Form className="d-flex mt-5 col-6 mx-auto" onSubmit={handleSubmit}>
           <Form.Control
             type="search"
@@ -84,7 +107,7 @@ export const Home = () => {
           <div
             id="list"
             className="w-50 bg-light mx-auto rounded position-absolute  translate-middle "
-            style={{ zIndex: 1, top: 345, right: 0 }}
+            style={{ zIndex: 1, top: 240, right: 0 }}
           >
             {autcompletes?.map((item) => (
               <option
@@ -108,7 +131,8 @@ export const Home = () => {
           </div>
         )}
       </Container>
-      <Container className="row justify-content-evenly mx-auto py-5">
+      <Container className="row justify-content-evenly mx-auto py-2">
+        <h2 className="text-center mb-4"> Popular Recipes </h2>
         {foods.map((item, index) => (
           <Card item={item} key={index} fav={false} />
         ))}

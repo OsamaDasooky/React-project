@@ -20,7 +20,11 @@ export default function Card({ item, fav, handleRemove, addToFav }) {
   const navigate = useNavigate();
 
   return (
-    <MDBCard style={{ maxWidth: "300px", marginBottom: 20 }}>
+    <MDBCard
+      style={{ maxWidth: "300px", marginBottom: 50 }}
+      data-aos="fade-up"
+      data-aos-anchor-placement="center-center"
+    >
       <MDBCardImage src={item.image} position="top" alt="..." />
       <MDBCardBody className="d-flex flex-column justify-content-between ">
         <MDBCardTitle>{item.label}</MDBCardTitle>

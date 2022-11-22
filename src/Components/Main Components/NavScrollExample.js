@@ -45,13 +45,17 @@ function NavScrollExample() {
             >
               About
             </NavLink>
-            <NavLink
-              to="/profile"
-              className="navbar-brand"
-              style={{ fontSize: 17 }}
-            >
-              Profile
-            </NavLink>
+            {isAuth() ? (
+              <NavLink
+                to="/profile"
+                className="navbar-brand"
+                style={{ fontSize: 17 }}
+              >
+                Profile
+              </NavLink>
+            ) : (
+              ""
+            )}
           </Nav>
           {isAuth() ? (
             <Button
